@@ -43,7 +43,7 @@ Adafruit_VEML7700::Adafruit_VEML7700(void) {}
  *    @return True if initialization was successful, otherwise false.
  */
 boolean Adafruit_VEML7700::begin(TwoWire *theWire) {
-  i2c_dev = new Adafruit_I2CDevice(VEML7700_I2CADDR_DEFAULT);
+  i2c_dev = new Adafruit_I2CDevice(VEML7700_I2CADDR_DEFAULT, theWire);
 
   if (!i2c_dev->begin()) {
     return false;
