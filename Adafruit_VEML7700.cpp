@@ -105,47 +105,87 @@ float Adafruit_VEML7700::normalize(float value) {
   return value;
 }
 
+/*!
+ *    @brief Read the calibrated lux value. See app note lux table on page 5
+ *    @returns Floating point Lux data (ALS multiplied by 0.0576)
+ */
 float Adafruit_VEML7700::readLux() {
   return normalize(ALS_Data->read()) * 0.0576;  // see app note lux table on page 5
 }
 
+/*!
+ *    @brief Read the raw ALS data
+ *    @returns 16-bit data value from the ALS register
+ */
 uint16_t Adafruit_VEML7700::readALS() {
   return ALS_Data->read();
 }
 
-
+/*!
+ *    @brief Read the white light data
+ *    @returns Floating point 'white light' data multiplied by 0.0576
+ */
 float Adafruit_VEML7700::readWhite() {
   return normalize(White_Data->read()) * 0.0576; // Unclear if this is the right multiplier
 }
 
 
+/*!
+ *    @brief Enable or disable the sensor
+ *    @param enable The flag to enable/disable
+ */
 void Adafruit_VEML7700::enable(bool enable) {
   ALS_Shutdown->write(!enable);
 }
 
+/*!
+ *    @brief Ask if the interrupt is enabled
+ *    @returns True if enabled, false otherwise
+ */
 bool Adafruit_VEML7700::enabled(void) {
   return !ALS_Shutdown->read();
 }
 
+/*!
+ *    @brief Enable or disable the interrupt
+ *    @param enable The flag to enable/disable
+ */
 void Adafruit_VEML7700::interruptEnable(bool enable) {
   ALS_Interrupt_Enable->write(enable);
 }
 
+
+/*!
+ *    @brief Ask if the interrupt is enabled
+ *    @returns True if enabled, false otherwise
+ */
 bool Adafruit_VEML7700::interruptEnabled(void) {
   return ALS_Interrupt_Enable->read();
 }
 
+
+/*!
+ *    @brief Set the ALS IRQ persistance setting
+ *    @param pers Persistance constant, can be VEML7700_PERS_1, VEML7700_PERS_2,
+ *    VEML7700_PERS_4 or VEML7700_PERS_8   
+ */
 void Adafruit_VEML7700::setPersistence(uint8_t pers) {
   ALS_Persistence->write(pers);
 }
 
+/*!
+ *    @brief Get the ALS IRQ persistance setting
+ *    @returns Persistance constant, can be VEML7700_PERS_1, VEML7700_PERS_2,
+ *    VEML7700_PERS_4 or VEML7700_PERS_8   
+ */
 uint8_t Adafruit_VEML7700::getPersistence(void) {
   return ALS_Persistence->read();
 }
 
 /*!
  *    @brief Set ALS integration time
- *    @param it Can be VEML7700_IT_100MS, VEML7700_IT_200MS, VEML7700_IT_400MS, VEML7700_IT_800MS, VEML7700_IT_50MS or VEML7700_IT_25MS    
+ *    @param it Can be VEML7700_IT_100MS, VEML7700_IT_200MS, VEML7700_IT_400MS, 
+ *    VEML7700_IT_800MS, VEML7700_IT_50MS or VEML7700_IT_25MS    
  */
 void Adafruit_VEML7700::setIntegrationTime(uint8_t it) {
   ALS_Integration_Time->write(it);
@@ -153,7 +193,8 @@ void Adafruit_VEML7700::setIntegrationTime(uint8_t it) {
 
 /*!
  *    @brief Get ALS integration time
- *    @returns IT index, can be VEML7700_IT_100MS, VEML7700_IT_200MS, VEML7700_IT_400MS, VEML7700_IT_800MS, VEML7700_IT_50MS or VEML7700_IT_25MS    
+ *    @returns IT index, can be VEML7700_IT_100MS, VEML7700_IT_200MS, VEML7700_IT_400MS, 
+ *    VEML7700_IT_800MS, VEML7700_IT_50MS or VEML7700_IT_25MS    
  */
 uint8_t Adafruit_VEML7700::getIntegrationTime(void) {
   return ALS_Integration_Time->read();
