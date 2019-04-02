@@ -38,8 +38,8 @@
 Adafruit_VEML7700::Adafruit_VEML7700(void) {}
 
 /*!
- *    @brief  Setups the HW
- *    @param  addr
+ *    @brief  Setups the hardware for talking to the VEML7700
+ *    @param  theWire An optional pointer to an I2C interface
  *    @return True if initialization was successful, otherwise false.
  */
 boolean Adafruit_VEML7700::begin(TwoWire *theWire) {
@@ -143,55 +143,107 @@ uint8_t Adafruit_VEML7700::getPersistence(void) {
   return ALS_Persistence->read();
 }
 
+/*!
+ *    @brief Set ALS integration time
+ *    @param it Can be VEML7700_IT_100MS, VEML7700_IT_200MS, VEML7700_IT_400MS, VEML7700_IT_800MS, VEML7700_IT_50MS or VEML7700_IT_25MS    
+ */
 void Adafruit_VEML7700::setIntegrationTime(uint8_t it) {
   ALS_Integration_Time->write(it);
 }
 
+/*!
+ *    @brief Get ALS integration time
+ *    @returns IT index, can be VEML7700_IT_100MS, VEML7700_IT_200MS, VEML7700_IT_400MS, VEML7700_IT_800MS, VEML7700_IT_50MS or VEML7700_IT_25MS    
+ */
 uint8_t Adafruit_VEML7700::getIntegrationTime(void) {
   return ALS_Integration_Time->read();
 }
 
+/*!
+ *    @brief Set ALS gain
+ *    @param gain Can be VEML7700_GAIN_1, VEML7700_GAIN_2, VEML7700_GAIN_1_8 or VEML7700_GAIN_1_4
+ */
 void Adafruit_VEML7700::setGain(uint8_t gain) {
   ALS_Gain->write(gain);
 }
 
+/*!
+ *    @brief Get ALS gain
+ *    @returns Gain index, can be VEML7700_GAIN_1, VEML7700_GAIN_2, VEML7700_GAIN_1_8 or VEML7700_GAIN_1_4
+ */
 uint8_t Adafruit_VEML7700::getGain(void) {
   return ALS_Gain->read();
 }
 
+
+/*!
+ *    @brief Enable power save mode
+ *    @param enable True if power save should be enabled
+ */
 void Adafruit_VEML7700::powerSaveEnable(bool enable) {
   PowerSave_Enable->write(enable);
 }
 
+/*!
+ *    @brief Check if power save mode is enabled
+ *    @returns True if power save is enabled
+ */
 bool Adafruit_VEML7700::powerSaveEnabled(void) {
   return PowerSave_Enable->read();
 }
 
+/*!
+ *    @brief Assign the power save register data
+ *    @param mode The 16-bit data to write to VEML7700_ALS_POWER_SAVE
+ */
 void Adafruit_VEML7700::setPowerSaveMode(uint8_t mode) {
   PowerSave_Mode->write(mode);
 }
 
+/*!
+ *    @brief  Retrieve the power save register data
+ *    @return 16-bit data from VEML7700_ALS_POWER_SAVE
+ */
 uint8_t Adafruit_VEML7700::getPowerSaveMode(void) {
   return PowerSave_Mode->read();
 }
 
+/*!
+ *    @brief Assign the low threshold register data
+ *    @param value The 16-bit data to write to VEML7700_ALS_THREHOLD_LOW
+ */
 void Adafruit_VEML7700::setLowThreshold(uint16_t value) {
   ALS_LowThreshold->write(value);
 }
 
+/*!
+ *    @brief  Retrieve the low threshold register data
+ *    @return 16-bit data from VEML7700_ALS_THREHOLD_LOW
+ */
 uint16_t Adafruit_VEML7700::getLowThreshold(void) {
   return ALS_LowThreshold->read();
 }
 
-
+/*!
+ *    @brief Assign the high threshold register data
+ *    @param value The 16-bit data to write to VEML7700_ALS_THREHOLD_HIGH
+ */
 void Adafruit_VEML7700::setHighThreshold(uint16_t value) {
   ALS_HighThreshold->write(value);
 }
 
+/*!
+ *    @brief  Retrieve the high threshold register data
+ *    @return 16-bit data from VEML7700_ALS_THREHOLD_HIGH
+ */
 uint16_t Adafruit_VEML7700::getHighThreshold(void) {
   return ALS_HighThreshold->read();
 }
 
+/*!
+ *    @brief  Retrieve the interrupt status register data
+ *    @return 16-bit data from VEML7700_INTERRUPTSTATUS
+ */
 uint16_t Adafruit_VEML7700::interruptStatus(void) {
   return Interrupt_Status->read();
 }
