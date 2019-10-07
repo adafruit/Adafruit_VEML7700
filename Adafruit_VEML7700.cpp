@@ -77,7 +77,7 @@ boolean Adafruit_VEML7700::begin(TwoWire *theWire) {
 }
 
 
-float Adafruit_VEML7700::normalize(float value) {
+float Adafruit_VEML7700::normalize_resolution(float value) {
   // adjust for gain (1x is normalized)
   switch (getGain()) {
   case VEML7700_GAIN_2:  
@@ -110,7 +110,23 @@ float Adafruit_VEML7700::normalize(float value) {
  *    @returns Floating point Lux data (ALS multiplied by 0.0576)
  */
 float Adafruit_VEML7700::readLux() {
-  return normalize(ALS_Data->read()) * 0.0576;  // see app note lux table on page 5
+  return ( normalize_resolution(ALS_Data->read()) * 0.0576);  // see app note lux table on page 5
+}
+
+/*!
+ *    @brief Read the lux value with correction for non-linearity at high-lux settings
+ *    @returns Floating point Lux data (ALS multiplied by 0.0576 and corrected for high-lux settings)
+ */
+float Adafruit_VEML7700::readLuxNormalized() {
+  float lux = readLux();
+  
+  // user-provided correction for non-linearities at high lux/white values:
+  // https://forums.adafruit.com/viewtopic.php?f=19&t=152997&p=758582#p759346
+  if ((getGain() == VEML7700_GAIN_1_8) && (getIntegrationTime() == VEML7700_IT_25MS)){
+    lux = 6.0135e-13*pow(lux,4) -  9.3924e-9*pow(lux,3) + 8.1488e-5*pow(lux,2) + 1.0023*lux;
+  }
+ 
+  return lux;  
 }
 
 /*!
@@ -126,9 +142,25 @@ uint16_t Adafruit_VEML7700::readALS() {
  *    @returns Floating point 'white light' data multiplied by 0.0576
  */
 float Adafruit_VEML7700::readWhite() {
-  return normalize(White_Data->read()) * 0.0576; // Unclear if this is the right multiplier
+  // white_corrected= 2E-15*pow(VEML_white,4) + 4E-12*pow(VEML_white,3) + 9E-06*pow(VEML_white,)2 + 1.0179*VEML_white - 11.052;
+  return normalize_resolution(White_Data->read()) * 0.0576; // Unclear if this is the right multiplier
 }
 
+/*!
+ *    @brief Read the 'white light' value with correction for non-linearity at high-lux settings
+ *    @returns Floating point 'white light' data multiplied by 0.0576 and corrected for high-lux settings
+ */
+float Adafruit_VEML7700::readWhiteNormalized() {
+  float white = readWhite();
+
+  // user-provided correction for non-linearities at high lux values:
+  // https://forums.adafruit.com/viewtopic.php?f=19&t=152997&p=758582#p759346
+  if ((getGain() == VEML7700_GAIN_1_8) && (getIntegrationTime() == VEML7700_IT_25MS)){
+    white = 2E-15*pow(white,4) + 4E-12*pow(white,3) + 9E-06*pow(white,2) + 1.0179*white - 11.052;
+  }
+
+  return white;
+}
 
 /*!
  *    @brief Enable or disable the sensor

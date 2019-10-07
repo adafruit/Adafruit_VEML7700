@@ -91,8 +91,11 @@ public:
 
 
   float readLux();
+  float readLuxNormalized();
+
   uint16_t readALS();
   float readWhite();
+  float readWhiteNormalized();
 
 private:
   Adafruit_I2CRegister *ALS_Config, *ALS_Data, *White_Data, 
@@ -101,7 +104,7 @@ private:
     *ALS_Persistence, *ALS_Integration_Time, *ALS_Gain,
     *PowerSave_Enable, *PowerSave_Mode;
 
-  float normalize(float value);
+  float normalize_resolution(float value);
 
   Adafruit_I2CDevice *i2c_dev;
 
