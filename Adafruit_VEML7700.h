@@ -64,7 +64,7 @@
 class Adafruit_VEML7700 {
 public:
   Adafruit_VEML7700();
-  boolean begin(TwoWire *theWire = &Wire);
+  bool begin(TwoWire *theWire = &Wire);
 
   void enable(bool enable);
   bool enabled(void);
