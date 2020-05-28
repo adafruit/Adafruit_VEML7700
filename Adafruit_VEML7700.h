@@ -59,11 +59,11 @@
 
 /*!
  *    @brief  Class that stores state and functions for interacting with
- *            VEML7700 Temp Sensor
+ *            VEML7700 Light Sensor
  */
 class Adafruit_VEML7700 {
 public:
-  Adafruit_VEML7700();
+  Adafruit_VEML7700(uint16_t _lowThreshold = 1000, uint16_t _highThreshold = 30000);
   bool begin(TwoWire *theWire = &Wire);
 
   void enable(bool enable);
@@ -95,6 +95,12 @@ public:
   float readWhite();
   float readWhiteNormalized();
 
+  float convertToLux(uint16_t value);
+  bool optimizeParams(uint16_t value);
+  uint16_t getRefreshTime();
+  double getGainValue(void);
+  double getIntegrationTimeFactor(void);
+
 private:
   Adafruit_I2CRegister *ALS_Config, *ALS_Data, *White_Data, *ALS_HighThreshold,
       *ALS_LowThreshold, *Power_Saving, *Interrupt_Status;
@@ -103,6 +109,8 @@ private:
       *PowerSave_Mode;
 
   float normalize_resolution(float value);
+  uint16_t lowThresh = 1000, hiThresh = 30000;
+
 
   Adafruit_I2CDevice *i2c_dev;
 };
