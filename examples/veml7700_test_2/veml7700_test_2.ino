@@ -155,5 +155,6 @@ void loop() {
 
   uint16_t refreshTime = veml.getRefreshTime();
   Serial.print("  ... Wait for VEML to be ready again: "); Serial.println(refreshTime);
-  delay(max(refreshTime, 500));   // delay at least 500ms
+  if (refreshTime < 500) refreshTime = 500;
+  delay(refreshTime);   // delay at least 500ms
 }
