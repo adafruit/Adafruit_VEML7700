@@ -91,7 +91,7 @@ bool Adafruit_VEML7700::begin(TwoWire *theWire) {
       new Adafruit_I2CRegister(i2c_dev, VEML7700_INTERRUPTSTATUS, 2, LSBFIRST);
 
   ALS_Shutdown =
-      new Adafruit_I2CRegisterBits(ALS_Config, 1, 0);  // # bits, bit_shift
+      new Adafruit_I2CRegisterBits(ALS_Config, 1, 0); // # bits, bit_shift
   ALS_Interrupt_Enable = new Adafruit_I2CRegisterBits(ALS_Config, 1, 1);
   ALS_Persistence = new Adafruit_I2CRegisterBits(ALS_Config, 2, 4);
   ALS_Integration_Time = new Adafruit_I2CRegisterBits(ALS_Config, 4, 6);
@@ -117,34 +117,34 @@ bool Adafruit_VEML7700::begin(TwoWire *theWire) {
 float Adafruit_VEML7700::normalize_resolution(float value) {
   // adjust for gain (1x is normalized)
   switch (getGain()) {
-    case VEML7700_GAIN_2:
-      value /= 2.0;
-      break;
-    case VEML7700_GAIN_1_4:
-      value *= 4;
-      break;
-    case VEML7700_GAIN_1_8:
-      value *= 8;
-      break;
+  case VEML7700_GAIN_2:
+    value /= 2.0;
+    break;
+  case VEML7700_GAIN_1_4:
+    value *= 4;
+    break;
+  case VEML7700_GAIN_1_8:
+    value *= 8;
+    break;
   }
 
   // adjust for integrationtime (100ms is normalized)
   switch (getIntegrationTime()) {
-    case VEML7700_IT_25MS:
-      value *= 4;
-      break;
-    case VEML7700_IT_50MS:
-      value *= 2;
-      break;
-    case VEML7700_IT_200MS:
-      value /= 2.0;
-      break;
-    case VEML7700_IT_400MS:
-      value /= 4.0;
-      break;
-    case VEML7700_IT_800MS:
-      value /= 8.0;
-      break;
+  case VEML7700_IT_25MS:
+    value *= 4;
+    break;
+  case VEML7700_IT_50MS:
+    value *= 2;
+    break;
+  case VEML7700_IT_200MS:
+    value /= 2.0;
+    break;
+  case VEML7700_IT_400MS:
+    value /= 4.0;
+    break;
+  case VEML7700_IT_800MS:
+    value /= 8.0;
+    break;
   }
 
   return value;
@@ -160,11 +160,11 @@ static const double integrationTimeCoeff[] = {1.0, 0.5, 0.25, 0.125, 1.0, 1.0,
                                               1.0, 1.0, 2.0,  1.0,   1.0, 1.0,
                                               4.0, 1.0, 1.0,  1.0};
 static const uint8_t gainIndex[] = {
-    2, 3, 0, 1};  // converts gain from getGain() to gainVals index
+    2, 3, 0, 1}; // converts gain from getGain() to gainVals index
 static const uint8_t integrationTimeIndex[] = {
     2, 3, 4, 5, 0, 0, 0, 0, 1,
-    0, 0, 0, 0, 0, 0, 0};  // converts from getInte...() to integrationTimeVals
-                           // index
+    0, 0, 0, 0, 0, 0, 0}; // converts from getInte...() to integrationTimeVals
+                          // index
 
 /*!
  *    @brief Convert the 7700 ALS value to lux. See app note lux table on page 5
@@ -204,7 +204,7 @@ bool Adafruit_VEML7700::optimizeParams(uint16_t raw) {
 
   bool somethingChanged = false;
 
-  if (raw <= lowThresh) {  // We have a small number for the raw ALS value.
+  if (raw <= lowThresh) { // We have a small number for the raw ALS value.
     // increase sensitivity
     if (gIndex < gainValsMaxIndex) {
       gIndex++;
@@ -215,18 +215,18 @@ bool Adafruit_VEML7700::optimizeParams(uint16_t raw) {
         somethingChanged = true;
       }
     }
-  } else if (raw > hiThresh) {  // We have a high number for raw ALS value.
+  } else if (raw > hiThresh) { // We have a high number for raw ALS value.
     // decrease sensitivity
-    if (iIndex > 2) {  // try to stick with VEML7700_IT_100MS
-      iIndex--;        // reduce integration time till we get to 100ms
+    if (iIndex > 2) { // try to stick with VEML7700_IT_100MS
+      iIndex--;       // reduce integration time till we get to 100ms
       somethingChanged = true;
     } else {
       if (gIndex > 0) {
-        gIndex--;  // reduce gain if possible
+        gIndex--; // reduce gain if possible
         somethingChanged = true;
-      } else {  // (not possible to reduce gain)
+      } else { // (not possible to reduce gain)
         if (iIndex > 0) {
-          iIndex--;  // reduce integration time anyway
+          iIndex--; // reduce integration time anyway
           somethingChanged = true;
         }
       }
@@ -252,9 +252,9 @@ uint16_t Adafruit_VEML7700::getRefreshTime() {
   // VEML7700_IT_25MS, and VEML7700_IT_50MS; just assume they are same as IT.
   static const uint16_t integrationTimes[] = {25, 50, 100, 200, 400, 800};
   static const uint16_t powerSaverTimes[] = {
-      500, 1000, 2000, 4000};  // deduced from app note table on page 16
+      500, 1000, 2000, 4000}; // deduced from app note table on page 16
   static const uint16_t powerOnWait =
-      3;  // the app note says 2.5 ms; round it up to 3
+      3; // the app note says 2.5 ms; round it up to 3
   uint8_t psm = getPowerSaveMode();
   uint8_t iIndex = integrationTimeIndex[getIntegrationTime()];
   // powerOnWait may not be needed in return value, but it is so
@@ -268,7 +268,7 @@ uint16_t Adafruit_VEML7700::getRefreshTime() {
  */
 float Adafruit_VEML7700::readLux() {
   return (normalize_resolution(ALS_Data->read()) *
-          0.0576);  // see app note lux table on page 5
+          0.0576); // see app note lux table on page 5
 }
 
 /*!
@@ -306,7 +306,7 @@ float Adafruit_VEML7700::readWhite() {
   // white_corrected= 2E-15*pow(VEML_white,4) + 4E-12*pow(VEML_white,3) +
   // 9E-06*pow(VEML_white,)2 + 1.0179*VEML_white - 11.052;
   return normalize_resolution(White_Data->read()) *
-         0.0576;  // Unclear if this is the right multiplier
+         0.0576; // Unclear if this is the right multiplier
 }
 
 /*!
