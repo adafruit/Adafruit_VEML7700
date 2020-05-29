@@ -168,6 +168,7 @@ static const uint8_t integrationTimeIndex[] = {
 
 /*!
  *    @brief Convert the 7700 ALS value to lux. See app note lux table on page 5
+ *    @param value  The raw ALS value from readALS().
  *    @returns Floating point Lux data corrected for gain, integration time, and
  * non-linearity.
  */
