@@ -13,15 +13,27 @@
 enum VemlResultType { GOOD, TOO_LOW, TOO_HIGH };
 
 /**
- * @brief val: ALS reading in lux. type: if the ALS reading is good, too dark,
- * or too bright.
+ * @brief return type of readLuxAuto()
  *
  */
 struct VemlAutoResult {
+  /**
+   * @brief ALS reading in lux.
+   *
+   */
   float val;
+  /**
+   * @brief If the ALS reading is good, too dark, or too bright.
+   *
+   */
   VemlResultType type;
 };
 
+/**
+ * @brief Compatible with Adafruit_VEML7700, with the added function of
+ * automatically setting gain and integration time.
+ *
+ */
 class VEML7700AutoGain : public Adafruit_VEML7700 {
 public:
   boolean begin(TwoWire *theWire = &Wire);
