@@ -12,6 +12,8 @@ void setup() {
     while (1);
   }
   Serial.println("Sensor found");
+  
+  veml.enable(false);
 
   veml.setGain(VEML7700_GAIN_1);
   veml.setIntegrationTime(VEML7700_IT_800MS);
@@ -40,6 +42,8 @@ void setup() {
   veml.setLowThreshold(10000);
   veml.setHighThreshold(20000);
   veml.interruptEnable(true);
+  
+  veml.enable(true);
 }
 
 void loop() {
