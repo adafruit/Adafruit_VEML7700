@@ -336,15 +336,17 @@ uint16_t Adafruit_VEML7700::interruptStatus(void) {
 }
 
 /*!
- *    @brief  Measure the Lux value (with multiple measurement settings for best result, might take some time)
+ *    @brief  Measure the Lux value (with multiple measurement settings for best
+ *    result, might take some time)
  *    @return Lux value, negative for error state
  */
 float Adafruit_VEML7700::luxAutoSensor() {
   // Music to develope "Yello ~ Lost Again - Extended 12"
-  const byte computetime = 20; // veml7700 needs "integrationtime+computetime" to calculate result
+  const byte computetime =
+      20; // veml7700 needs "integrationtime+computetime" to calculate result
 
-  int8_t integrationtime = 0;  // "middle" integration time
-  int8_t gain = 1;             // lowest gain
+  int8_t integrationtime = 0; // "middle" integration time
+  int8_t gain = 1;            // lowest gain
   bool first = true;
 
   // first try: low light environement
@@ -354,7 +356,9 @@ float Adafruit_VEML7700::luxAutoSensor() {
     // trigger new measurement
     enable(false);
     enable(true);
-    delay(IntegrationTime(integrationtime) + computetime); // +20 for extra processing else sensor gives no valid result
+    delay(IntegrationTime(integrationtime) +
+          computetime); // +20 for extra processing else sensor gives no valid
+                        // result
     uint16_t als = ALS_Data->read();
 
     if (als <= 100) {
@@ -365,15 +369,15 @@ float Adafruit_VEML7700::luxAutoSensor() {
         integrationtime++;
       } else {
         // reached max gain and max integrationtime
-        //Serial.println("Return 1");
+        // Serial.println("Return 1");
         return als * ChartResolution(integrationtime, gain);
       }
     } else {
       if (first) {
-        //Serial.println("Break 1");
-        break; //yeah
+        // Serial.println("Break 1");
+        break; // yeah
       } else {
-        //Serial.println("Return 2");
+        // Serial.println("Return 2");
         return als * ChartResolution(integrationtime, gain);
       }
     }
@@ -386,17 +390,20 @@ float Adafruit_VEML7700::luxAutoSensor() {
     // trigger new measurement
     enable(false);
     enable(true);
-    delay(IntegrationTime(integrationtime) + computetime); // +20 for extra processing else sensor gives no valid result
+    delay(IntegrationTime(integrationtime) +
+          computetime); // +20 for extra processing else sensor gives no valid
+                        // result
     uint16_t als = ALS_Data->read();
 
     if (als < 10000) {
-      //Serial.println("Return 3");
-      return als * (1.0023 + als * (0.000081488 + als * (-9.3924e-9 + 6.0135e-13 * als)));
+      // Serial.println("Return 3");
+      return als * (1.0023 + als * (0.000081488 +
+                                    als * (-9.3924e-9 + 6.0135e-13 * als)));
     } else {
       integrationtime--;
       if (integrationtime <= -3) {
         // Ambient light really ≥ 200 klx?
-        return -2.0;   // error
+        return -2.0; // error
       }
     }
   } while (1);
@@ -406,43 +413,53 @@ float Adafruit_VEML7700::luxAutoSensor() {
 
 // helper 1: page 21, Table "Gain selection"
 uint8_t Adafruit_VEML7700::ChartGain(const int8_t G) {
-    switch (G) {
-        case 1 : return VEML7700_GAIN_1_8;
-        case 2 : return VEML7700_GAIN_1_4;
-        case 3 : return VEML7700_GAIN_1;
-        case 4 :
-        default : return VEML7700_GAIN_2;
-    }
+  switch (G) {
+  case 1:
+    return VEML7700_GAIN_1_8;
+  case 2:
+    return VEML7700_GAIN_1_4;
+  case 3:
+    return VEML7700_GAIN_1;
+  case 4:
+  default:
+    return VEML7700_GAIN_2;
+  }
 }
 
 // helper 2: page 21, Table "ALS integration time setting"
 uint16_t Adafruit_VEML7700::ChartIT(const int8_t IT) {
-    switch (IT) {
-        case -2 : return VEML7700_IT_25MS;
-        case -1 : return VEML7700_IT_50MS;
-        case  0 : return VEML7700_IT_100MS;
-        case  1 : return VEML7700_IT_200MS;
-        case  2 : return VEML7700_IT_400MS;
-        case  3 : 
-        default : return VEML7700_IT_800MS;
-    }
+  switch (IT) {
+  case -2:
+    return VEML7700_IT_25MS;
+  case -1:
+    return VEML7700_IT_50MS;
+  case 0:
+    return VEML7700_IT_100MS;
+  case 1:
+    return VEML7700_IT_200MS;
+  case 2:
+    return VEML7700_IT_400MS;
+  case 3:
+  default:
+    return VEML7700_IT_800MS;
+  }
 }
 
 // helper 3: page 5, Table RESOLUTION AND MAXIMUM DETECTION RANGE
 uint16_t Adafruit_VEML7700::IntegrationTime(const int8_t IT) {
   switch (ChartIT(IT)) {
-    case VEML7700_IT_800MS:
-      return 800;
-    case VEML7700_IT_400MS:
-      return 400;
-    case VEML7700_IT_200MS:
-      return 200;
-    case VEML7700_IT_100MS:
-      return 100;
-    case VEML7700_IT_50MS:
-      return 50;
-    case VEML7700_IT_25MS:
-      return 25;
+  case VEML7700_IT_800MS:
+    return 800;
+  case VEML7700_IT_400MS:
+    return 400;
+  case VEML7700_IT_200MS:
+    return 200;
+  case VEML7700_IT_100MS:
+    return 100;
+  case VEML7700_IT_50MS:
+    return 50;
+  case VEML7700_IT_25MS:
+    return 25;
   }
 }
 
@@ -451,45 +468,44 @@ float Adafruit_VEML7700::ChartResolution(const int8_t IT, const int8_t G) {
   float base = 0.0036;
 
   switch (ChartGain(G)) {
-    /*
-      case VEML7700_GAIN_2 :
-      base *= 1;
-      break;
-    */
-    case VEML7700_GAIN_1 :
-      base *= 2;
-      break;
-    case VEML7700_GAIN_1_4 :
-      base *= 8;
-      break;
-    case VEML7700_GAIN_1_8 :
-      base *= 16;
-      break;
+  /*
+    case VEML7700_GAIN_2 :
+    base *= 1;
+    break;
+  */
+  case VEML7700_GAIN_1:
+    base *= 2;
+    break;
+  case VEML7700_GAIN_1_4:
+    base *= 8;
+    break;
+  case VEML7700_GAIN_1_8:
+    base *= 16;
+    break;
   }
 
   switch (ChartIT(IT)) {
-    /*
-    case VEML7700_IT_800MS:
-      base *= 1;
-      break;
-    */  
-    case VEML7700_IT_400MS:
-      base *= 2;
-      break;
-    case VEML7700_IT_200MS:
-      base *= 4;
-      break;
-    case VEML7700_IT_100MS:
-      base *= 8;
-      break;
-    case VEML7700_IT_50MS:
-      base *= 16;
-      break;
-    case VEML7700_IT_25MS:
-      base *= 32;
-      break;
+  /*
+  case VEML7700_IT_800MS:
+    base *= 1;
+    break;
+  */
+  case VEML7700_IT_400MS:
+    base *= 2;
+    break;
+  case VEML7700_IT_200MS:
+    base *= 4;
+    break;
+  case VEML7700_IT_100MS:
+    base *= 8;
+    break;
+  case VEML7700_IT_50MS:
+    base *= 16;
+    break;
+  case VEML7700_IT_25MS:
+    base *= 32;
+    break;
   }
 
   return base;
 }
-

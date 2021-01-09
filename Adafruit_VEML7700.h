@@ -57,18 +57,18 @@
 #define VEML7700_POWERSAVE_MODE3 0x02 ///< Power saving mode 3
 #define VEML7700_POWERSAVE_MODE4 0x03 ///< Power saving mode 4
 
-
 /*!
  *    @brief  Class that stores state and functions for interacting with
  *            VEML7700 Temp Sensor
  */
 class Adafruit_VEML7700 {
 public:
-  Adafruit_VEML7700(): ALS_Config(NULL), ALS_Data(NULL),
-   White_Data(NULL), ALS_HighThreshold(NULL), ALS_LowThreshold(NULL), Power_Saving(NULL), 
-   Interrupt_Status(NULL), ALS_Shutdown(NULL), ALS_Interrupt_Enable(NULL), ALS_Persistence(NULL), 
-   ALS_Integration_Time(NULL), ALS_Gain(NULL), PowerSave_Enable(NULL), PowerSave_Mode(NULL),
-   i2c_dev(NULL) {}; 
+  Adafruit_VEML7700()
+      : ALS_Config(NULL), ALS_Data(NULL), White_Data(NULL),
+        ALS_HighThreshold(NULL), ALS_LowThreshold(NULL), Power_Saving(NULL),
+        Interrupt_Status(NULL), ALS_Shutdown(NULL), ALS_Interrupt_Enable(NULL),
+        ALS_Persistence(NULL), ALS_Integration_Time(NULL), ALS_Gain(NULL),
+        PowerSave_Enable(NULL), PowerSave_Mode(NULL), i2c_dev(NULL){};
   bool begin(TwoWire *theWire = &Wire);
 
   void enable(bool enable);
@@ -101,21 +101,22 @@ public:
   float readWhiteNormalized();
 
   /* will measure and calculate the current white lux value
-     might use multiple measurements to optimize settings and gives the "best" result
-     therefor it might need some time, worst case can be around 2000 (!) ms
-     uses delay(), so cooperative multitasking is ensured
-     Follows the guidelines from Vishay in "Designing the VEML7700 Into an Application"
-                                             Revision: 20-Sep-2019 Document Number: 84323 
-     returns negative value in case of error                                             
-  */   
+     might use multiple measurements to optimize settings and gives the "best"
+     result therefor it might need some time, worst case can be around 2000 (!)
+     ms uses delay(), so cooperative multitasking is ensured Follows the
+     guidelines from Vishay in "Designing the VEML7700 Into an Application"
+                                             Revision: 20-Sep-2019 Document
+     Number: 84323 returns negative value in case of error
+  */
   float luxAutoSensor();
+
 private:
   Adafruit_I2CRegister *ALS_Config, *ALS_Data, *White_Data, *ALS_HighThreshold,
       *ALS_LowThreshold, *Power_Saving, *Interrupt_Status;
   Adafruit_I2CRegisterBits *ALS_Shutdown, *ALS_Interrupt_Enable,
       *ALS_Persistence, *ALS_Integration_Time, *ALS_Gain, *PowerSave_Enable,
       *PowerSave_Mode;
-  
+
   float normalize_resolution(float value);
 
   // hlprs for luxAutoSensor()
