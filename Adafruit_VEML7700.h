@@ -63,7 +63,12 @@
  */
 class Adafruit_VEML7700 {
 public:
-  Adafruit_VEML7700();
+  Adafruit_VEML7700()
+      : ALS_Config(NULL), ALS_Data(NULL), White_Data(NULL),
+        ALS_HighThreshold(NULL), ALS_LowThreshold(NULL), Power_Saving(NULL),
+        Interrupt_Status(NULL), ALS_Shutdown(NULL), ALS_Interrupt_Enable(NULL),
+        ALS_Persistence(NULL), ALS_Integration_Time(NULL), ALS_Gain(NULL),
+        PowerSave_Enable(NULL), PowerSave_Mode(NULL), i2c_dev(NULL){};
   bool begin(TwoWire *theWire = &Wire);
 
   void enable(bool enable);
@@ -95,6 +100,16 @@ public:
   float readWhite();
   float readWhiteNormalized();
 
+  /* will measure and calculate the current white lux value
+     might use multiple measurements to optimize settings and gives the "best"
+     result therefor it might need some time, worst case can be around 2000 (!)
+     ms uses delay(), so cooperative multitasking is ensured Follows the
+     guidelines from Vishay in "Designing the VEML7700 Into an Application"
+                                             Revision: 20-Sep-2019 Document
+     Number: 84323 returns negative value in case of error
+  */
+  float luxAutoSensor();
+
 private:
   Adafruit_I2CRegister *ALS_Config, *ALS_Data, *White_Data, *ALS_HighThreshold,
       *ALS_LowThreshold, *Power_Saving, *Interrupt_Status;
@@ -103,6 +118,12 @@ private:
       *PowerSave_Mode;
 
   float normalize_resolution(float value);
+
+  // hlprs for luxAutoSensor()
+  uint8_t ChartGain(const int8_t G);
+  uint16_t ChartIT(const int8_t IT);
+  float ChartResolution(const int8_t IT, const int8_t G);
+  uint16_t IntegrationTime(const int8_t IT);
 
   Adafruit_I2CDevice *i2c_dev;
 };
