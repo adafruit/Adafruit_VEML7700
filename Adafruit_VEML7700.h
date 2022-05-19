@@ -88,22 +88,21 @@ public:
   uint16_t getHighThreshold(void);
   uint16_t interruptStatus(void);
 
-  float readLux();
-  float readLuxNormalized();
-
   uint16_t readALS();
-  float readWhite();
-  float readWhiteNormalized();
+  uint16_t readWhite();
+  float readLux();
 
 private:
+  const float MAX_RES = 0.0036;
+  const float GAIN_MAX = 2;
+  const float IT_MAX = 800;
+  float getResolution();
+
   Adafruit_I2CRegister *ALS_Config, *ALS_Data, *White_Data, *ALS_HighThreshold,
       *ALS_LowThreshold, *Power_Saving, *Interrupt_Status;
   Adafruit_I2CRegisterBits *ALS_Shutdown, *ALS_Interrupt_Enable,
       *ALS_Persistence, *ALS_Integration_Time, *ALS_Gain, *PowerSave_Enable,
       *PowerSave_Mode;
-
-  float normalize_resolution(float value);
-
   Adafruit_I2CDevice *i2c_dev;
 };
 

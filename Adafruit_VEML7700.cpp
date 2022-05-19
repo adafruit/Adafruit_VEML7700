@@ -75,7 +75,7 @@ bool Adafruit_VEML7700::begin(TwoWire *theWire) {
   enable(false);
   interruptEnable(false);
   setPersistence(VEML7700_PERS_1);
-  setGain(VEML7700_GAIN_1);
+  setGain(VEML7700_GAIN_1_8);
   setIntegrationTime(VEML7700_IT_100MS);
   powerSaveEnable(false);
   enable(true);
@@ -83,70 +83,11 @@ bool Adafruit_VEML7700::begin(TwoWire *theWire) {
   return true;
 }
 
-float Adafruit_VEML7700::normalize_resolution(float value) {
-  // adjust for gain (1x is normalized)
-  switch (getGain()) {
-  case VEML7700_GAIN_2:
-    value /= 2.0;
-    break;
-  case VEML7700_GAIN_1_4:
-    value *= 4;
-    break;
-  case VEML7700_GAIN_1_8:
-    value *= 8;
-    break;
-  }
-
-  // adjust for integrationtime (100ms is normalized)
-  switch (getIntegrationTime()) {
-  case VEML7700_IT_25MS:
-    value *= 4;
-    break;
-  case VEML7700_IT_50MS:
-    value *= 2;
-    break;
-  case VEML7700_IT_200MS:
-    value /= 2.0;
-    break;
-  case VEML7700_IT_400MS:
-    value /= 4.0;
-    break;
-  case VEML7700_IT_800MS:
-    value /= 8.0;
-    break;
-  }
-
-  return value;
-}
-
 /*!
  *    @brief Read the calibrated lux value. See app note lux table on page 5
- *    @returns Floating point Lux data (ALS multiplied by 0.0576)
+ *    @returns Floating point Lux data
  */
-float Adafruit_VEML7700::readLux() {
-  return (normalize_resolution(ALS_Data->read()) *
-          0.0576); // see app note lux table on page 5
-}
-
-/*!
- *    @brief Read the lux value with correction for non-linearity at high-lux
- * settings
- *    @returns Floating point Lux data (ALS multiplied by 0.0576 and corrected
- * for high-lux settings)
- */
-float Adafruit_VEML7700::readLuxNormalized() {
-  float lux = readLux();
-
-  // user-provided correction for non-linearities at high lux/white values:
-  // https://forums.adafruit.com/viewtopic.php?f=19&t=152997&p=758582#p759346
-  if ((getGain() == VEML7700_GAIN_1_8) &&
-      (getIntegrationTime() == VEML7700_IT_25MS)) {
-    lux = 6.0135e-13 * pow(lux, 4) - 9.3924e-9 * pow(lux, 3) +
-          8.1488e-5 * pow(lux, 2) + 1.0023 * lux;
-  }
-
-  return lux;
-}
+float Adafruit_VEML7700::readLux() { return getResolution() * readALS(); }
 
 /*!
  *    @brief Read the raw ALS data
@@ -155,35 +96,10 @@ float Adafruit_VEML7700::readLuxNormalized() {
 uint16_t Adafruit_VEML7700::readALS() { return ALS_Data->read(); }
 
 /*!
- *    @brief Read the white light data
- *    @returns Floating point 'white light' data multiplied by 0.0576
+ *    @brief Read the raw white light data
+ *    @returns 16-bit data value from the WHITE register
  */
-float Adafruit_VEML7700::readWhite() {
-  // white_corrected= 2E-15*pow(VEML_white,4) + 4E-12*pow(VEML_white,3) +
-  // 9E-06*pow(VEML_white,)2 + 1.0179*VEML_white - 11.052;
-  return normalize_resolution(White_Data->read()) *
-         0.0576; // Unclear if this is the right multiplier
-}
-
-/*!
- *    @brief Read the 'white light' value with correction for non-linearity at
- * high-lux settings
- *    @returns Floating point 'white light' data multiplied by 0.0576 and
- * corrected for high-lux settings
- */
-float Adafruit_VEML7700::readWhiteNormalized() {
-  float white = readWhite();
-
-  // user-provided correction for non-linearities at high lux values:
-  // https://forums.adafruit.com/viewtopic.php?f=19&t=152997&p=758582#p759346
-  if ((getGain() == VEML7700_GAIN_1_8) &&
-      (getIntegrationTime() == VEML7700_IT_25MS)) {
-    white = 2E-15 * pow(white, 4) + 4E-12 * pow(white, 3) +
-            9E-06 * pow(white, 2) + 1.0179 * white - 11.052;
-  }
-
-  return white;
-}
+uint16_t Adafruit_VEML7700::readWhite() { return White_Data->read(); }
 
 /*!
  *    @brief Enable or disable the sensor
@@ -333,4 +249,54 @@ uint16_t Adafruit_VEML7700::getHighThreshold(void) {
  */
 uint16_t Adafruit_VEML7700::interruptStatus(void) {
   return Interrupt_Status->read();
+}
+
+/*!
+ *    @brief Determines resolution for current gain and integration time
+ * settings.
+ */
+float Adafruit_VEML7700::getResolution(void) {
+  float gain, intTime;
+
+  switch (getGain()) {
+  case VEML7700_GAIN_1_8:
+    gain = 0.125;
+    break;
+  case VEML7700_GAIN_1_4:
+    gain = 0.25;
+    break;
+  case VEML7700_GAIN_1:
+    gain = 1;
+    break;
+  case VEML7700_GAIN_2:
+    gain = 2;
+    break;
+  default:
+    gain = -1;
+  }
+
+  switch (getIntegrationTime()) {
+  case VEML7700_IT_25MS:
+    intTime = 25;
+    break;
+  case VEML7700_IT_50MS:
+    intTime = 50;
+    break;
+  case VEML7700_IT_100MS:
+    intTime = 100;
+    break;
+  case VEML7700_IT_200MS:
+    intTime = 200;
+    break;
+  case VEML7700_IT_400MS:
+    intTime = 400;
+    break;
+  case VEML7700_IT_800MS:
+    intTime = 800;
+    break;
+  default:
+    intTime = -1;
+  }
+
+  return MAX_RES * (IT_MAX / intTime) * (GAIN_MAX / gain);
 }
