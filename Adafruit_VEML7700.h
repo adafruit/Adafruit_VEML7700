@@ -57,6 +57,7 @@
 #define VEML7700_POWERSAVE_MODE3 0x02 ///< Power saving mode 3
 #define VEML7700_POWERSAVE_MODE4 0x03 ///< Power saving mode 4
 
+/** Options for lux reading method */
 typedef enum { VEML_LUX_NORMAL, VEML_LUX_CORRECTED, VEML_LUX_AUTO } luxMethod;
 
 /*!
