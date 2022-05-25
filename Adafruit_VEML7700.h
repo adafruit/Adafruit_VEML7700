@@ -57,9 +57,11 @@
 #define VEML7700_POWERSAVE_MODE3 0x02 ///< Power saving mode 3
 #define VEML7700_POWERSAVE_MODE4 0x03 ///< Power saving mode 4
 
+typedef enum { VEML_LUX_NORMAL, VEML_LUX_CORRECTED, VEML_LUX_AUTO } luxMethod;
+
 /*!
  *    @brief  Class that stores state and functions for interacting with
- *            VEML7700 Temp Sensor
+ *            VEML7700 Light Sensor
  */
 class Adafruit_VEML7700 {
 public:
@@ -75,8 +77,10 @@ public:
   uint8_t getPersistence(void);
   void setIntegrationTime(uint8_t it);
   uint8_t getIntegrationTime(void);
+  int getIntegrationTimeValue(void);
   void setGain(uint8_t gain);
   uint8_t getGain(void);
+  float getGainValue(void);
   void powerSaveEnable(bool enable);
   bool powerSaveEnabled(void);
   void setPowerSaveMode(uint8_t mode);
@@ -90,13 +94,17 @@ public:
 
   uint16_t readALS();
   uint16_t readWhite();
-  float readLux();
+  float readLux(luxMethod method = VEML_LUX_NORMAL);
 
 private:
   const float MAX_RES = 0.0036;
   const float GAIN_MAX = 2;
   const float IT_MAX = 800;
-  float getResolution();
+  float getResolution(void);
+  float computeLux(uint16_t rawALS, bool corrected = false);
+  float autoLux(void);
+  void readWait(void);
+  unsigned long lastRead;
 
   Adafruit_I2CRegister *ALS_Config, *ALS_Data, *White_Data, *ALS_HighThreshold,
       *ALS_LowThreshold, *Power_Saving, *Interrupt_Status;
