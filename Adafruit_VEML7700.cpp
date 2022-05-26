@@ -27,9 +27,6 @@
  *     v1.0 - First release
  */
 
-#include "Arduino.h"
-#include <Wire.h>
-
 #include "Adafruit_VEML7700.h"
 
 /*!
@@ -38,7 +35,7 @@
 Adafruit_VEML7700::Adafruit_VEML7700(void) {}
 
 /*!
- *    @brief  Setups the hardware for talking to the VEML7700
+ *    @brief  Sets up the hardware for talking to the VEML7700
  *    @param  theWire An optional pointer to an I2C interface
  *    @return True if initialization was successful, otherwise false.
  */
@@ -80,32 +77,65 @@ bool Adafruit_VEML7700::begin(TwoWire *theWire) {
   powerSaveEnable(false);
   enable(true);
 
+  lastRead = millis();
+
   return true;
 }
 
 /*!
  *    @brief Read the calibrated lux value. See app note lux table on page 5
+ *    @param method Lux comptation method to use. One of
  *    @returns Floating point Lux data
  */
-float Adafruit_VEML7700::readLux() { return getResolution() * readALS(); }
+float Adafruit_VEML7700::readLux(luxMethod method) {
+  switch (method) {
+  case VEML_LUX_NORMAL:
+    return computeLux(readALS());
+  case VEML_LUX_CORRECTED:
+    return computeLux(readALS(), true);
+  case VEML_LUX_AUTO:
+    return autoLux();
+  default:
+    return -1;
+  }
+}
 
 /*!
  *    @brief Read the raw ALS data
  *    @returns 16-bit data value from the ALS register
  */
-uint16_t Adafruit_VEML7700::readALS() { return ALS_Data->read(); }
+uint16_t Adafruit_VEML7700::readALS() {
+  readWait();
+  lastRead = millis();
+  return ALS_Data->read();
+}
 
 /*!
  *    @brief Read the raw white light data
  *    @returns 16-bit data value from the WHITE register
  */
-uint16_t Adafruit_VEML7700::readWhite() { return White_Data->read(); }
+uint16_t Adafruit_VEML7700::readWhite() {
+  readWait();
+  lastRead = millis();
+  return White_Data->read();
+}
 
 /*!
  *    @brief Enable or disable the sensor
  *    @param enable The flag to enable/disable
  */
-void Adafruit_VEML7700::enable(bool enable) { ALS_Shutdown->write(!enable); }
+void Adafruit_VEML7700::enable(bool enable) {
+  ALS_Shutdown->write(!enable);
+  // From app note:
+  //   '''
+  //   When activating the sensor, set bit 0 of the command register
+  //   to “0” with a wait time of 2.5 ms before the first measurement
+  //   is needed, allowing for the correct start of the signal
+  //   processor and oscillator.
+  //   '''
+  if (enable)
+    delay(5); // doubling 2.5ms spec to be sure
+}
 
 /*!
  *    @brief Ask if the interrupt is enabled
@@ -154,10 +184,11 @@ uint8_t Adafruit_VEML7700::getPersistence(void) {
  */
 void Adafruit_VEML7700::setIntegrationTime(uint8_t it) {
   ALS_Integration_Time->write(it);
+  lastRead = millis(); // reset
 }
 
 /*!
- *    @brief Get ALS integration time
+ *    @brief Get ALS integration time setting
  *    @returns IT index, can be VEML7700_IT_100MS, VEML7700_IT_200MS,
  * VEML7700_IT_400MS, VEML7700_IT_800MS, VEML7700_IT_50MS or VEML7700_IT_25MS
  */
@@ -166,18 +197,63 @@ uint8_t Adafruit_VEML7700::getIntegrationTime(void) {
 }
 
 /*!
+ *    @brief Get ALS integration time value
+ *    @returns ALS integration time in milliseconds
+ */
+int Adafruit_VEML7700::getIntegrationTimeValue(void) {
+  switch (getIntegrationTime()) {
+  case VEML7700_IT_25MS:
+    return 25;
+  case VEML7700_IT_50MS:
+    return 50;
+  case VEML7700_IT_100MS:
+    return 100;
+  case VEML7700_IT_200MS:
+    return 200;
+  case VEML7700_IT_400MS:
+    return 400;
+  case VEML7700_IT_800MS:
+    return 800;
+  default:
+    return -1;
+  }
+}
+
+/*!
  *    @brief Set ALS gain
  *    @param gain Can be VEML7700_GAIN_1, VEML7700_GAIN_2, VEML7700_GAIN_1_8 or
  * VEML7700_GAIN_1_4
  */
-void Adafruit_VEML7700::setGain(uint8_t gain) { ALS_Gain->write(gain); }
+void Adafruit_VEML7700::setGain(uint8_t gain) {
+  ALS_Gain->write(gain);
+  lastRead = millis(); // reset
+}
 
 /*!
- *    @brief Get ALS gain
+ *    @brief Get ALS gain setting
  *    @returns Gain index, can be VEML7700_GAIN_1, VEML7700_GAIN_2,
  * VEML7700_GAIN_1_8 or VEML7700_GAIN_1_4
  */
 uint8_t Adafruit_VEML7700::getGain(void) { return ALS_Gain->read(); }
+
+/*!
+ *    @brief Get ALS gain value
+ *    @returns Actual gain value as float
+ */
+float Adafruit_VEML7700::getGainValue(void) {
+  switch (getGain()) {
+  case VEML7700_GAIN_1_8:
+    return 0.125;
+  case VEML7700_GAIN_1_4:
+    return 0.25;
+  case VEML7700_GAIN_1:
+    return 1;
+  case VEML7700_GAIN_2:
+    return 2;
+  default:
+    return -1;
+  }
+}
 
 /*!
  *    @brief Enable power save mode
@@ -256,47 +332,86 @@ uint16_t Adafruit_VEML7700::interruptStatus(void) {
  * settings.
  */
 float Adafruit_VEML7700::getResolution(void) {
-  float gain, intTime;
+  return MAX_RES * (IT_MAX / getIntegrationTimeValue()) *
+         (GAIN_MAX / getGainValue());
+}
 
-  switch (getGain()) {
-  case VEML7700_GAIN_1_8:
-    gain = 0.125;
-    break;
-  case VEML7700_GAIN_1_4:
-    gain = 0.25;
-    break;
-  case VEML7700_GAIN_1:
-    gain = 1;
-    break;
-  case VEML7700_GAIN_2:
-    gain = 2;
-    break;
-  default:
-    gain = -1;
+/*!
+ *    @brief Copmute lux from ALS reading.
+ *    @param rawALS raw ALS register value
+ *    @param corrected if true, apply non-linear correction
+ *    @return lux value
+ */
+float Adafruit_VEML7700::computeLux(uint16_t rawALS, bool corrected) {
+  float lux = getResolution() * rawALS;
+  if (corrected)
+    lux = (((6.0135e-13 * lux - 9.3924e-9) * lux + 8.1488e-5) * lux + 1.0023) *
+          lux;
+  return lux;
+}
+
+void Adafruit_VEML7700::readWait(void) {
+  // From app note:
+  //   '''
+  //   Without using the power-saving feature (PSM_EN = 0), the
+  //   controller has to wait before reading out measurement results,
+  //   at least for the programmed integration time. For example,
+  //   for ALS_IT = 100 ms a wait time of ≥ 100 ms is needed.
+  //   '''
+  // Based on testing, it needs more. So doubling to be sure.
+
+  unsigned long timeToWait = 2 * getIntegrationTimeValue(); // see above
+  unsigned long timeWaited = millis() - lastRead;
+
+  if (timeWaited < timeToWait)
+    delay(timeToWait - timeWaited);
+}
+
+/*!
+ *  @brief Implemenation of App Note "Designing the VEML7700 Into an
+ * Application", Vishay Document Number: 84323, Fig. 24 Flow Chart. This will
+ * automatically adjust gain and integration time as needed to obtain a good raw
+ * count value. Additionally, a non-linear correction is applied if needed.
+ */
+float Adafruit_VEML7700::autoLux(void) {
+  const uint8_t gains[] = {VEML7700_GAIN_1_8, VEML7700_GAIN_1_4,
+                           VEML7700_GAIN_1, VEML7700_GAIN_2};
+  const uint8_t intTimes[] = {VEML7700_IT_25MS,  VEML7700_IT_50MS,
+                              VEML7700_IT_100MS, VEML7700_IT_200MS,
+                              VEML7700_IT_400MS, VEML7700_IT_800MS};
+
+  uint8_t gainIndex = 0;      // start with ALS gain = 1/8
+  uint8_t itIndex = 2;        // start with ALS integration time = 100ms
+  bool useCorrection = false; // flag for non-linear correction
+
+  setGain(gains[gainIndex]);
+  setIntegrationTime(intTimes[itIndex]);
+
+  uint16_t ALS = readALS();
+
+  if (ALS <= 100) {
+
+    // increase first gain and then integration time as needed
+    // compute lux using simple linear formula
+    while ((ALS <= 100) && !((gainIndex == 3) && (itIndex == 5))) {
+      if (gainIndex < 3) {
+        setGain(gains[++gainIndex]);
+      } else if (itIndex < 5) {
+        setIntegrationTime(intTimes[++itIndex]);
+      }
+      ALS = readALS();
+    }
+
+  } else {
+
+    // decrease integration time as needed
+    // compute lux using non-linear correction
+    useCorrection = true;
+    while ((ALS > 10000) && (itIndex > 0)) {
+      setIntegrationTime(intTimes[--itIndex]);
+      ALS = readALS();
+    }
   }
 
-  switch (getIntegrationTime()) {
-  case VEML7700_IT_25MS:
-    intTime = 25;
-    break;
-  case VEML7700_IT_50MS:
-    intTime = 50;
-    break;
-  case VEML7700_IT_100MS:
-    intTime = 100;
-    break;
-  case VEML7700_IT_200MS:
-    intTime = 200;
-    break;
-  case VEML7700_IT_400MS:
-    intTime = 400;
-    break;
-  case VEML7700_IT_800MS:
-    intTime = 800;
-    break;
-  default:
-    intTime = -1;
-  }
-
-  return MAX_RES * (IT_MAX / intTime) * (GAIN_MAX / gain);
+  return computeLux(ALS, useCorrection);
 }
