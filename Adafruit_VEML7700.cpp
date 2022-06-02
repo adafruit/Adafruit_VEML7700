@@ -88,11 +88,16 @@ bool Adafruit_VEML7700::begin(TwoWire *theWire) {
  *    @returns Floating point Lux data
  */
 float Adafruit_VEML7700::readLux(luxMethod method) {
+  bool wait = true;
   switch (method) {
+  case VEML_LUX_NORMAL_NOWAIT:
+    wait = false;
   case VEML_LUX_NORMAL:
-    return computeLux(readALS());
+    return computeLux(readALS(wait));
+  case VEML_LUX_CORRECTED_NOWAIT:
+    wait = false;
   case VEML_LUX_CORRECTED:
-    return computeLux(readALS(), true);
+    return computeLux(readALS(wait), true);
   case VEML_LUX_AUTO:
     return autoLux();
   default:
@@ -102,20 +107,28 @@ float Adafruit_VEML7700::readLux(luxMethod method) {
 
 /*!
  *    @brief Read the raw ALS data
+ *    @param wait If false (default), read out measurement with no delay. If
+ * true, wait as need based on integration time before reading out measurement
+ * results.
  *    @returns 16-bit data value from the ALS register
  */
-uint16_t Adafruit_VEML7700::readALS() {
-  readWait();
+uint16_t Adafruit_VEML7700::readALS(bool wait) {
+  if (wait)
+    readWait();
   lastRead = millis();
   return ALS_Data->read();
 }
 
 /*!
  *    @brief Read the raw white light data
+ *    @param wait If false (default), read out measurement with no delay. If
+ * true, wait as need based on integration time before reading out measurement
+ * results.
  *    @returns 16-bit data value from the WHITE register
  */
-uint16_t Adafruit_VEML7700::readWhite() {
-  readWait();
+uint16_t Adafruit_VEML7700::readWhite(bool wait) {
+  if (wait)
+    readWait();
   lastRead = millis();
   return White_Data->read();
 }
