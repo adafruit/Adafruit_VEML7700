@@ -58,7 +58,13 @@
 #define VEML7700_POWERSAVE_MODE4 0x03 ///< Power saving mode 4
 
 /** Options for lux reading method */
-typedef enum { VEML_LUX_NORMAL, VEML_LUX_CORRECTED, VEML_LUX_AUTO } luxMethod;
+typedef enum {
+  VEML_LUX_NORMAL,
+  VEML_LUX_CORRECTED,
+  VEML_LUX_AUTO,
+  VEML_LUX_NORMAL_NOWAIT,
+  VEML_LUX_CORRECTED_NOWAIT
+} luxMethod;
 
 /*!
  *    @brief  Class that stores state and functions for interacting with
@@ -93,8 +99,8 @@ public:
   uint16_t getHighThreshold(void);
   uint16_t interruptStatus(void);
 
-  uint16_t readALS();
-  uint16_t readWhite();
+  uint16_t readALS(bool wait = false);
+  uint16_t readWhite(bool wait = false);
   float readLux(luxMethod method = VEML_LUX_NORMAL);
 
 private:
