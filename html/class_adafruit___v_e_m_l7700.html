@@ -143,12 +143,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac0beda99ece8c7389013f934ebf31024"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_e_m_l7700.html#ac0beda99ece8c7389013f934ebf31024">interruptStatus</a> (void)</td></tr>
 <tr class="memdesc:ac0beda99ece8c7389013f934ebf31024"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the interrupt status register data.  <a href="#ac0beda99ece8c7389013f934ebf31024">More...</a><br /></td></tr>
 <tr class="separator:ac0beda99ece8c7389013f934ebf31024"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa55ce8b30bbbef50f8760b5e8d3a65df"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_e_m_l7700.html#aa55ce8b30bbbef50f8760b5e8d3a65df">readALS</a> ()</td></tr>
-<tr class="memdesc:aa55ce8b30bbbef50f8760b5e8d3a65df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the raw ALS data.  <a href="#aa55ce8b30bbbef50f8760b5e8d3a65df">More...</a><br /></td></tr>
-<tr class="separator:aa55ce8b30bbbef50f8760b5e8d3a65df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0da72a34edb69d7b6f439ce9be43031"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_e_m_l7700.html#ad0da72a34edb69d7b6f439ce9be43031">readWhite</a> ()</td></tr>
-<tr class="memdesc:ad0da72a34edb69d7b6f439ce9be43031"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the raw white light data.  <a href="#ad0da72a34edb69d7b6f439ce9be43031">More...</a><br /></td></tr>
-<tr class="separator:ad0da72a34edb69d7b6f439ce9be43031"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50d2e811c614e1e02c12b9a8becb8396"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_e_m_l7700.html#a50d2e811c614e1e02c12b9a8becb8396">readALS</a> (bool wait=false)</td></tr>
+<tr class="memdesc:a50d2e811c614e1e02c12b9a8becb8396"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the raw ALS data.  <a href="#a50d2e811c614e1e02c12b9a8becb8396">More...</a><br /></td></tr>
+<tr class="separator:a50d2e811c614e1e02c12b9a8becb8396"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8f9ad598a8d730126a3305cb57738b8"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_e_m_l7700.html#af8f9ad598a8d730126a3305cb57738b8">readWhite</a> (bool wait=false)</td></tr>
+<tr class="memdesc:af8f9ad598a8d730126a3305cb57738b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the raw white light data.  <a href="#af8f9ad598a8d730126a3305cb57738b8">More...</a><br /></td></tr>
+<tr class="separator:af8f9ad598a8d730126a3305cb57738b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73c222cb6ed12584655318189f1bf4e5"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_e_m_l7700.html#a73c222cb6ed12584655318189f1bf4e5">readLux</a> (<a class="el" href="_adafruit___v_e_m_l7700_8h.html#a18f52f55e6612e305402219a7e48c10d">luxMethod</a> method=VEML_LUX_NORMAL)</td></tr>
 <tr class="memdesc:a73c222cb6ed12584655318189f1bf4e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the calibrated lux value. See app note lux table on page 5.  <a href="#a73c222cb6ed12584655318189f1bf4e5">More...</a><br /></td></tr>
 <tr class="separator:a73c222cb6ed12584655318189f1bf4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -669,8 +669,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa55ce8b30bbbef50f8760b5e8d3a65df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa55ce8b30bbbef50f8760b5e8d3a65df">&#9670;&nbsp;</a></span>readALS()</h2>
+<a id="a50d2e811c614e1e02c12b9a8becb8396"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50d2e811c614e1e02c12b9a8becb8396">&#9670;&nbsp;</a></span>readALS()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -678,19 +678,26 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">uint16_t Adafruit_VEML7700::readALS </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>wait</em> = <code>false</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Read the raw ALS data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">wait</td><td>If false (default), read out measurement with no delay. If true, wait as need based on integration time before reading out measurement results. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>16-bit data value from the ALS register </dd></dl>
 
 </div>
 </div>
-<a id="ad0da72a34edb69d7b6f439ce9be43031"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0da72a34edb69d7b6f439ce9be43031">&#9670;&nbsp;</a></span>readWhite()</h2>
+<a id="af8f9ad598a8d730126a3305cb57738b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8f9ad598a8d730126a3305cb57738b8">&#9670;&nbsp;</a></span>readWhite()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -698,13 +705,20 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">uint16_t Adafruit_VEML7700::readWhite </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>wait</em> = <code>false</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Read the raw white light data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">wait</td><td>If false (default), read out measurement with no delay. If true, wait as need based on integration time before reading out measurement results. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>16-bit data value from the WHITE register </dd></dl>
 
 </div>
