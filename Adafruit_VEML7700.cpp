@@ -194,10 +194,19 @@ uint8_t Adafruit_VEML7700::getPersistence(void) {
  *    @brief Set ALS integration time
  *    @param it Can be VEML7700_IT_100MS, VEML7700_IT_200MS, VEML7700_IT_400MS,
  *    VEML7700_IT_800MS, VEML7700_IT_50MS or VEML7700_IT_25MS
+ *    @param wait Waits to insure old integration time cycle has completed. This
+ * is a blocking delay. If disabled by passing false, user code must insure a
+ * new reading is not done before old integration cycle completes.
  */
-void Adafruit_VEML7700::setIntegrationTime(uint8_t it) {
+void Adafruit_VEML7700::setIntegrationTime(uint8_t it, bool wait) {
+  // save current integration time
+  int flushDelay = wait ? getIntegrationTimeValue() : 0;
+  // set new integration time
   ALS_Integration_Time->write(it);
-  lastRead = millis(); // reset
+  // pause old integration time to insure sensor cycle has completed
+  delay(flushDelay);
+  // reset counter
+  lastRead = millis();
 }
 
 /*!
@@ -400,7 +409,9 @@ float Adafruit_VEML7700::autoLux(void) {
   setGain(gains[gainIndex]);
   setIntegrationTime(intTimes[itIndex]);
 
-  uint16_t ALS = readALS();
+  uint16_t ALS = readALS(true);
+  // Serial.println("** AUTO LUX DEBUG **");
+  // Serial.print("ALS initial = "); Serial.println(ALS);
 
   if (ALS <= 100) {
 
@@ -412,7 +423,8 @@ float Adafruit_VEML7700::autoLux(void) {
       } else if (itIndex < 5) {
         setIntegrationTime(intTimes[++itIndex]);
       }
-      ALS = readALS();
+      ALS = readALS(true);
+      // Serial.print("ALS low lux = "); Serial.println(ALS);
     }
 
   } else {
@@ -422,9 +434,11 @@ float Adafruit_VEML7700::autoLux(void) {
     useCorrection = true;
     while ((ALS > 10000) && (itIndex > 0)) {
       setIntegrationTime(intTimes[--itIndex]);
-      ALS = readALS();
+      ALS = readALS(true);
+      // Serial.print("ALS  hi lux = "); Serial.println(ALS);
     }
   }
+  // Serial.println("** AUTO LUX DEBUG **");
 
   return computeLux(ALS, useCorrection);
 }

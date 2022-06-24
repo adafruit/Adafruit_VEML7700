@@ -82,7 +82,7 @@ public:
   bool interruptEnabled(void);
   void setPersistence(uint8_t pers);
   uint8_t getPersistence(void);
-  void setIntegrationTime(uint8_t it);
+  void setIntegrationTime(uint8_t it, bool wait = true);
   uint8_t getIntegrationTime(void);
   int getIntegrationTimeValue(void);
   void setGain(uint8_t gain);
