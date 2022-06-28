@@ -98,9 +98,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ada194f35c2d6dcf229a102029edea4e0"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_e_m_l7700.html#ada194f35c2d6dcf229a102029edea4e0">getPersistence</a> (void)</td></tr>
 <tr class="memdesc:ada194f35c2d6dcf229a102029edea4e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the ALS IRQ persistance setting.  <a href="#ada194f35c2d6dcf229a102029edea4e0">More...</a><br /></td></tr>
 <tr class="separator:ada194f35c2d6dcf229a102029edea4e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22030afb0ea9bc182f60c3e9d1b045b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_e_m_l7700.html#a22030afb0ea9bc182f60c3e9d1b045b4">setIntegrationTime</a> (uint8_t it)</td></tr>
-<tr class="memdesc:a22030afb0ea9bc182f60c3e9d1b045b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set ALS integration time.  <a href="#a22030afb0ea9bc182f60c3e9d1b045b4">More...</a><br /></td></tr>
-<tr class="separator:a22030afb0ea9bc182f60c3e9d1b045b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99840c86bb5e6d901f2fa2374ba70b29"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_e_m_l7700.html#a99840c86bb5e6d901f2fa2374ba70b29">setIntegrationTime</a> (uint8_t it, bool wait=true)</td></tr>
+<tr class="memdesc:a99840c86bb5e6d901f2fa2374ba70b29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set ALS integration time.  <a href="#a99840c86bb5e6d901f2fa2374ba70b29">More...</a><br /></td></tr>
+<tr class="separator:a99840c86bb5e6d901f2fa2374ba70b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1752a503f4078c54b1e468e968f6fe3d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___v_e_m_l7700.html#a1752a503f4078c54b1e468e968f6fe3d">getIntegrationTime</a> (void)</td></tr>
 <tr class="memdesc:a1752a503f4078c54b1e468e968f6fe3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get ALS integration time setting.  <a href="#a1752a503f4078c54b1e468e968f6fe3d">More...</a><br /></td></tr>
 <tr class="separator:a1752a503f4078c54b1e468e968f6fe3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -324,8 +324,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a22030afb0ea9bc182f60c3e9d1b045b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a22030afb0ea9bc182f60c3e9d1b045b4">&#9670;&nbsp;</a></span>setIntegrationTime()</h2>
+<a id="a99840c86bb5e6d901f2fa2374ba70b29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99840c86bb5e6d901f2fa2374ba70b29">&#9670;&nbsp;</a></span>setIntegrationTime()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -334,8 +334,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void Adafruit_VEML7700::setIntegrationTime </td>
           <td>(</td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>it</em></td><td>)</td>
+          <td class="paramname"><em>it</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>wait</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -344,6 +354,7 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">it</td><td>Can be VEML7700_IT_100MS, VEML7700_IT_200MS, VEML7700_IT_400MS, VEML7700_IT_800MS, VEML7700_IT_50MS or VEML7700_IT_25MS </td></tr>
+    <tr><td class="paramname">wait</td><td>Waits to insure old integration time cycle has completed. This is a blocking delay. If disabled by passing false, user code must insure a new reading is not done before old integration cycle completes. </td></tr>
   </table>
   </dd>
 </dl>
