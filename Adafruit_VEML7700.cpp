@@ -89,13 +89,13 @@ bool Adafruit_VEML7700::begin(TwoWire *theWire) {
  */
 float Adafruit_VEML7700::readLux(luxMethod method) {
   bool wait = true;
-  switch (method) {
-  case VEML_LUX_NORMAL_NOWAIT:
+
+  if (method == VEML_LUX_NORMAL_NOWAIT || method == VEML_LUX_CORRECTED_NOWAIT)
     wait = false;
+
+  switch (method) {
   case VEML_LUX_NORMAL:
     return computeLux(readALS(wait));
-  case VEML_LUX_CORRECTED_NOWAIT:
-    wait = false;
   case VEML_LUX_CORRECTED:
     return computeLux(readALS(wait), true);
   case VEML_LUX_AUTO:
