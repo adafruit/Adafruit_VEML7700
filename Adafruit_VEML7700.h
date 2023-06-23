@@ -57,6 +57,14 @@
 #define VEML7700_POWERSAVE_MODE3 0x02 ///< Power saving mode 3
 #define VEML7700_POWERSAVE_MODE4 0x03 ///< Power saving mode 4
 
+// used to explicitly annotate switch case fall throughs
+// newer compilers will throw a warning otherwise
+#if defined(__GNUC__) && __GNUC__ >= 7
+#define VEML7700_FALLTHROUGH __attribute__((fallthrough));
+#else
+#define VEML7770_FALLTHROUGH
+#endif
+
 /** Options for lux reading method */
 typedef enum {
   VEML_LUX_NORMAL,
