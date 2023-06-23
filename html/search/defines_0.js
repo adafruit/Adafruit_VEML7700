@@ -27,5 +27,6 @@ var searchData=
   ['veml7700_5fpowersave_5fmode2',['VEML7700_POWERSAVE_MODE2',['../_adafruit___v_e_m_l7700_8h.html#ac87e9079b731d240c33f3aacd2ea0f21',1,'Adafruit_VEML7700.h']]],
   ['veml7700_5fpowersave_5fmode3',['VEML7700_POWERSAVE_MODE3',['../_adafruit___v_e_m_l7700_8h.html#aa3df1380896b46e4d4e89d307e522533',1,'Adafruit_VEML7700.h']]],
   ['veml7700_5fpowersave_5fmode4',['VEML7700_POWERSAVE_MODE4',['../_adafruit___v_e_m_l7700_8h.html#a921c869e02d5eeb6bd9b5e07ba7359aa',1,'Adafruit_VEML7700.h']]],
-  ['veml7700_5fwhite_5fdata',['VEML7700_WHITE_DATA',['../_adafruit___v_e_m_l7700_8h.html#aabab10b5708dc515d55e846c30b859c8',1,'Adafruit_VEML7700.h']]]
+  ['veml7700_5fwhite_5fdata',['VEML7700_WHITE_DATA',['../_adafruit___v_e_m_l7700_8h.html#aabab10b5708dc515d55e846c30b859c8',1,'Adafruit_VEML7700.h']]],
+  ['veml7770_5ffallthrough',['VEML7770_FALLTHROUGH',['../_adafruit___v_e_m_l7700_8h.html#a8e8c0db936665ffe14fe420012c09ae6',1,'Adafruit_VEML7700.h']]]
 ];
