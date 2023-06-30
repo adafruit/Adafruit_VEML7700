@@ -64,7 +64,7 @@
 #if defined(__GNUC__) && __GNUC__ >= 7
 #define VEML7700_FALLTHROUGH __attribute__((fallthrough));
 #else
-#define VEML7770_FALLTHROUGH
+#define VEML7700_FALLTHROUGH
 #endif
 
 /** Options for lux reading method */
