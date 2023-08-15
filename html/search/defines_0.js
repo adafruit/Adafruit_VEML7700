@@ -5,6 +5,7 @@ var searchData=
   ['veml7700_5fals_5fpower_5fsave',['VEML7700_ALS_POWER_SAVE',['../_adafruit___v_e_m_l7700_8h.html#a65e19d018fbbb9bbe7f6009e5be8a14e',1,'Adafruit_VEML7700.h']]],
   ['veml7700_5fals_5fthrehold_5fhigh',['VEML7700_ALS_THREHOLD_HIGH',['../_adafruit___v_e_m_l7700_8h.html#a09c6086c36bdbd61abe4d2902acb8f69',1,'Adafruit_VEML7700.h']]],
   ['veml7700_5fals_5fthrehold_5flow',['VEML7700_ALS_THREHOLD_LOW',['../_adafruit___v_e_m_l7700_8h.html#a2dba95a2e1380568bd74b34b3e3ae6fa',1,'Adafruit_VEML7700.h']]],
+  ['veml7700_5ffallthrough',['VEML7700_FALLTHROUGH',['../_adafruit___v_e_m_l7700_8h.html#a6bda2e4b9a2aeef9d06e512e51748f97',1,'Adafruit_VEML7700.h']]],
   ['veml7700_5fgain_5f1',['VEML7700_GAIN_1',['../_adafruit___v_e_m_l7700_8h.html#a6e4c26b22762f70e503c657b4ce22998',1,'Adafruit_VEML7700.h']]],
   ['veml7700_5fgain_5f1_5f4',['VEML7700_GAIN_1_4',['../_adafruit___v_e_m_l7700_8h.html#afdbd803e547967e481cae3819b466554',1,'Adafruit_VEML7700.h']]],
   ['veml7700_5fgain_5f1_5f8',['VEML7700_GAIN_1_8',['../_adafruit___v_e_m_l7700_8h.html#afe932b46c50965ff1e0253ebb079eb83',1,'Adafruit_VEML7700.h']]],
@@ -27,6 +28,5 @@ var searchData=
   ['veml7700_5fpowersave_5fmode2',['VEML7700_POWERSAVE_MODE2',['../_adafruit___v_e_m_l7700_8h.html#ac87e9079b731d240c33f3aacd2ea0f21',1,'Adafruit_VEML7700.h']]],
   ['veml7700_5fpowersave_5fmode3',['VEML7700_POWERSAVE_MODE3',['../_adafruit___v_e_m_l7700_8h.html#aa3df1380896b46e4d4e89d307e522533',1,'Adafruit_VEML7700.h']]],
   ['veml7700_5fpowersave_5fmode4',['VEML7700_POWERSAVE_MODE4',['../_adafruit___v_e_m_l7700_8h.html#a921c869e02d5eeb6bd9b5e07ba7359aa',1,'Adafruit_VEML7700.h']]],
-  ['veml7700_5fwhite_5fdata',['VEML7700_WHITE_DATA',['../_adafruit___v_e_m_l7700_8h.html#aabab10b5708dc515d55e846c30b859c8',1,'Adafruit_VEML7700.h']]],
-  ['veml7770_5ffallthrough',['VEML7770_FALLTHROUGH',['../_adafruit___v_e_m_l7700_8h.html#a8e8c0db936665ffe14fe420012c09ae6',1,'Adafruit_VEML7700.h']]]
+  ['veml7700_5fwhite_5fdata',['VEML7700_WHITE_DATA',['../_adafruit___v_e_m_l7700_8h.html#aabab10b5708dc515d55e846c30b859c8',1,'Adafruit_VEML7700.h']]]
 ];
