@@ -175,8 +175,8 @@ bool Adafruit_VEML7700::interruptEnabled(void) {
 }
 
 /*!
- *    @brief Set the ALS IRQ persistance setting
- *    @param pers Persistance constant, can be VEML7700_PERS_1, VEML7700_PERS_2,
+ *    @brief Set the ALS IRQ persistence setting
+ *    @param pers Persistence constant, can be VEML7700_PERS_1, VEML7700_PERS_2,
  *    VEML7700_PERS_4 or VEML7700_PERS_8
  */
 void Adafruit_VEML7700::setPersistence(uint8_t pers) {
@@ -184,8 +184,8 @@ void Adafruit_VEML7700::setPersistence(uint8_t pers) {
 }
 
 /*!
- *    @brief Get the ALS IRQ persistance setting
- *    @returns Persistance constant, can be VEML7700_PERS_1, VEML7700_PERS_2,
+ *    @brief Get the ALS IRQ persistence setting
+ *    @returns Persistence constant, can be VEML7700_PERS_1, VEML7700_PERS_2,
  *    VEML7700_PERS_4 or VEML7700_PERS_8
  */
 uint8_t Adafruit_VEML7700::getPersistence(void) {
