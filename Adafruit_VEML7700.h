@@ -47,10 +47,10 @@
 #define VEML7700_IT_50MS 0x08  ///< ALS intetgration time 50ms
 #define VEML7700_IT_25MS 0x0C  ///< ALS intetgration time 25ms
 
-#define VEML7700_PERS_1 0x00 ///< ALS irq persisance 1 sample
-#define VEML7700_PERS_2 0x01 ///< ALS irq persisance 2 samples
-#define VEML7700_PERS_4 0x02 ///< ALS irq persisance 4 samples
-#define VEML7700_PERS_8 0x03 ///< ALS irq persisance 8 samples
+#define VEML7700_PERS_1 0x00 ///< ALS irq persistence 1 sample
+#define VEML7700_PERS_2 0x01 ///< ALS irq persistence 2 samples
+#define VEML7700_PERS_4 0x02 ///< ALS irq persistence 4 samples
+#define VEML7700_PERS_8 0x03 ///< ALS irq persistence 8 samples
 
 #define VEML7700_POWERSAVE_MODE1 0x00 ///< Power saving mode 1
 #define VEML7700_POWERSAVE_MODE2 0x01 ///< Power saving mode 2
