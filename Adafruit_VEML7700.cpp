@@ -82,6 +82,27 @@ bool Adafruit_VEML7700::begin(TwoWire *theWire) {
   return true;
 }
 
+ /*!
+ *    @brief  Frees memory to avoid memory leaks
+ */
+void Adafruit_VEML7700::end(void) {
+  delete i2c_dev;
+  delete ALS_Config;
+  delete ALS_HighThreshold;
+  delete ALS_LowThreshold;
+  delete Power_Saving;
+  delete ALS_Data;
+  delete White_Data;
+  delete Interrupt_Status;
+  delete ALS_Shutdown;
+  delete ALS_Interrupt_Enable;
+  delete ALS_Persistence;
+  delete ALS_Integration_Time;
+  delete ALS_Gain;
+  delete PowerSave_Enable;
+  delete PowerSave_Mode;
+}
+
 /*!
  *    @brief Read the calibrated lux value. See app note lux table on page 5
  *    @param method Lux comptation method to use. One of
